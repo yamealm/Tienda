@@ -3,34 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modelo;
+package com.tienda.modelos;
 
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
-
-
 /**
  *
  * @author Rhoymmer Granados
  */
-public class Producto implements Serializable {
-    
+public class Vendedor implements Serializable {
+
     @Id
     private int id;
-    
-    @Column
-    private String codigo;
-    
+
     @Column
     private String nombre;
-    
+
     @Column
-    private String categoria;
-    
-    @Column
-    private Float precio;
+    private Float sueldo;
 
     public int getId() {
         return id;
@@ -38,15 +30,6 @@ public class Producto implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getNombre() {
@@ -57,23 +40,16 @@ public class Producto implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public Float getSueldo() {
+        return sueldo;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setSueldo(Float sueldo) {
+        this.sueldo = sueldo;
     }
 
-    public Float getPrecio() {
-        return precio;
+    public String toString() {
+        return this.nombre;
     }
 
-    public void setPrecio(Float precio) {
-        this.precio = precio;
-    }
-    
-    
-    
-    
 }

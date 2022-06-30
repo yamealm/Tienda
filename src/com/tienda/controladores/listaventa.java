@@ -1,5 +1,5 @@
 
-package formulario;
+package com.tienda.controladores;
 
 public class listaventa{
     

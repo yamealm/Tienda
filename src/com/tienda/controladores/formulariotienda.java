@@ -1,44 +1,44 @@
-package formulario;
+package com.tienda.controladores;
 
-import com.mysql.jdbc.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import trabajopractico.conexion;
+
+import com.tienda.conexion.db.conexion;
+import com.tienda.excepciones.RegisterNoEncontradoException;
+import com.tienda.modelos.Categoria;
+import com.tienda.modelos.Producto;
+import com.tienda.modelos.Vendedor;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 
 
 public class formulariotienda extends javax.swing.JFrame {
 
    conexion conn;
-   String productos [] = {"PLAYSTATION 4", "PLAYSTATION 5", "XBOX X", "XBOX S", "NINTENDO SWITCH", "GOD OF WAR 4", "ELDEN RING", "SPIDERMAN", "HALO", "RESIDENT EVIL", "FALL GUYS", "FORNITE", "WARZONE", "MARIO MAKER 2", "MARIO BOWSERS FURY", "AURICULARES PULSE 3D", "AURICULARES GOLD BLACK", "JOYSTICK DUALSENSE", "JOYSTICK DUALSHOCK", "JOYSTICK PRO CONTROLLER", "PLAYSTATION VR"};
-   double preciospro [] = {300, 700, 700, 250, 350, 20, 40, 25, 35, 50.5, 75.2, 5.2, 15, 10.5, 60.5, 150, 100, 85.3, 45, 70, 100};
-   String categorias [] = {"CONSOLAS", "VIDEOJUEGOS", "ACCESORIOS"};
-   String nombreven [] = {"RHOYMMER GRANADOS", "MILDRA ALVAREZ"};
    int cantidad = 0;
-   double preciounidad = 0;
-   double total = 0;
+   float preciounidad = 0;
+   float total = 0;
    DefaultTableModel modelo = new DefaultTableModel();
    ArrayList<listaventa>listaVenta = new ArrayList<listaventa>();
    
-   public formulariotienda() {
-        initComponents();  
-        
-        DefaultComboBoxModel comboModel =  new DefaultComboBoxModel(productos);
-        comboxpro.setModel(comboModel);
-        DefaultComboBoxModel comboModel2 =  new DefaultComboBoxModel(categorias);
-        comboxcat.setModel(comboModel2);
-        DefaultComboBoxModel comboModel3 =  new DefaultComboBoxModel(nombreven);
-        comboxven.setModel(comboModel3);
+    public formulariotienda() {
+        initComponents();
+        conn = new conexion();
+        cargarProductos(null);
+        cargarCategorias();
+        cargarVendedores();
         calcularPrecio();
         modelo.addColumn("PRODUCTO");
         modelo.addColumn("CATEGORIA");
         modelo.addColumn("VENDEDOR");
         modelo.addColumn("TOTAL");
         actualizarTabla();
-         }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -53,14 +53,14 @@ public class formulariotienda extends javax.swing.JFrame {
         totalven = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaventa = new javax.swing.JTable();
-        comboxpro = new javax.swing.JComboBox<>();
+        comboxpro = new javax.swing.JComboBox<Producto>();
         catpro = new javax.swing.JLabel();
         nomven = new javax.swing.JLabel();
         botagre = new javax.swing.JButton();
         spincanpro = new javax.swing.JSpinner();
         botbuscar = new javax.swing.JButton();
-        comboxven = new javax.swing.JComboBox<>();
-        comboxcat = new javax.swing.JComboBox<>();
+        comboxven = new javax.swing.JComboBox<Vendedor>();
+        comboxcat = new javax.swing.JComboBox<Categoria>();
         txtprecio = new javax.swing.JTextField();
         txttotal = new javax.swing.JTextField();
         eticomision = new javax.swing.JLabel();
@@ -247,6 +247,56 @@ public class formulariotienda extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void cargarProductos(Categoria categoria){
+        DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+        try {
+            List<Producto> productos = categoria==null ? conn.buscarProdutos():conn.buscarProdutosPorCategoria(categoria.getId());
+            for (Producto producto : productos) {
+                comboModel.addElement(producto);
+            }
+        } catch (RegisterNoEncontradoException e) {
+            txtprecio.setText(Moneda(0f));
+            JOptionPane.showMessageDialog(null, "Aviso:" + e.getMessage());
+        }
+        comboxpro.setModel(comboModel);
+        
+    }
+    
+    private void cargarCategorias() {
+        DefaultComboBoxModel comboModel2 = new DefaultComboBoxModel();
+        try {
+            List<Categoria> categorias = conn.buscarCategorias();
+            for (Categoria categoria : categorias) {
+                comboModel2.addElement(categoria);
+            }
+        } catch (RegisterNoEncontradoException e) {
+            JOptionPane.showMessageDialog(null, "Aviso:" + e.getMessage());
+        }
+        comboxcat.setModel(comboModel2);
+        comboxcat.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent event) {
+                if (event.getStateChange() == ItemEvent.SELECTED) {
+                    cargarProductos(((Categoria)comboxcat.getSelectedItem()));
+                }
+            }
+        });
+    }
+    
+    private void cargarVendedores() {
+        DefaultComboBoxModel comboModel3 = new DefaultComboBoxModel();
+        try {
+            List<Vendedor> vendedores = conn.buscarVendedores();
+            for (Vendedor vendedor : vendedores) {
+                comboModel3.addElement(vendedor);
+            }
+        } catch (RegisterNoEncontradoException e) {
+            JOptionPane.showMessageDialog(null, "Aviso:" + e.getMessage());
+        }
+        comboxven.setModel(comboModel3);
+       
+    }
 
     private void botGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botGuardarActionPerformed
               
@@ -261,15 +311,14 @@ public class formulariotienda extends javax.swing.JFrame {
         System.out.println("VENDEDOR:" + tablaventa.getValueAt(i, 2));
         listado[i].vendedor =  tablaventa.getValueAt(i, 2).toString();
         System.out.println("TOTAL:" + tablaventa.getValueAt(i, 3));
-        listado[i].ventas = Double.parseDouble(tablaventa.getValueAt(i, 3).toString());
+        listado[i].ventas = Float.parseFloat(tablaventa.getValueAt(i, 3).toString());
         }
-       
-       String nombrevendedor = tablaventa.getValueAt(0, 2).toString();
-       String valor = txttotal.getText();
-       String sueldo = txtcomision.getText();
+       Vendedor vendedor = new Vendedor();
+       vendedor.setNombre(tablaventa.getValueAt(0, 2).toString());
+       vendedor.setSueldo(Float.parseFloat(txttotal.getText()));
        conn = new conexion();
        conn.guardar(listado);
-       conn.guardarvendedor(nombrevendedor, valor, sueldo);
+       conn.guardarvendedor(vendedor);
             
     }//GEN-LAST:event_botGuardarActionPerformed
 
@@ -293,7 +342,11 @@ public class formulariotienda extends javax.swing.JFrame {
        
        String nombrvendedor = null;
        conn = new conexion();
-       conn.buscarProdutos();
+       try {
+		conn.buscarProdutos();
+	} catch (RegisterNoEncontradoException e) {
+		JOptionPane.showMessageDialog(null, "Aviso:" + e.getMessage());
+	}
 //       conn.buscar(nombrvendedor);
     }//GEN-LAST:event_botbuscarActionPerformed
 
@@ -309,12 +362,12 @@ public class formulariotienda extends javax.swing.JFrame {
  
     public void calcularPrecio(){
         
-        preciounidad=preciospro[comboxpro.getSelectedIndex()];
+        preciounidad=((Producto)comboxpro.getSelectedItem()).getPrecio();
         cantidad=Integer.parseInt(spincanpro.getValue().toString());
         txtprecio.setText(Moneda(cantidad*preciounidad));
     }
         
-        public String Moneda (double preciounidad){
+        public String Moneda (float preciounidad){
         
         return +Math.round(preciounidad*100.0)/100.0+"";
     }
@@ -326,7 +379,7 @@ public class formulariotienda extends javax.swing.JFrame {
             modelo.removeRow(0);
         }
         
-        double subtotal = 0;
+        float subtotal = 0;
         
         for (listaventa v : listaVenta){
             Object x[] = new Object[4];
@@ -338,20 +391,20 @@ public class formulariotienda extends javax.swing.JFrame {
             modelo.addRow(x);
         }  
         
-        double total = subtotal;  
-        double comision = 0;
+        float total = subtotal;  
+        float comision = 0;
         cantidad=Integer.parseInt(spincanpro.getValue().toString());
         txttotal.setText(Moneda(total));
           
         if (cantidad <=2){
          
-         comision = total*0.05;
+         comision = total*0.05f;
          txtcomision.setText(Moneda(comision));
         }
         
         else {
             
-            comision = total*0.10;
+            comision = total*0.10f;
             txtcomision.setText(Moneda(comision));
         }
                 
@@ -374,9 +427,9 @@ public class formulariotienda extends javax.swing.JFrame {
     private javax.swing.JButton botbuscar;
     private javax.swing.JLabel canpro;
     private javax.swing.JLabel catpro;
-    private javax.swing.JComboBox<String> comboxcat;
-    private javax.swing.JComboBox<String> comboxpro;
-    private javax.swing.JComboBox<String> comboxven;
+    private javax.swing.JComboBox<Categoria> comboxcat;
+    private javax.swing.JComboBox<Producto> comboxpro;
+    private javax.swing.JComboBox<Vendedor> comboxven;
     private javax.swing.JLabel eticomision;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
