@@ -26,7 +26,6 @@ public class Producto_venta implements Serializable {
     @Column
     private int idVenta;
     
-   
 
     public int getId() {
         return id;

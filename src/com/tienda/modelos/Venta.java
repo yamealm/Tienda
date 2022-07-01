@@ -30,10 +30,10 @@ public class Venta implements Serializable {
     private float total;
     
     @Column
-    private Vendedor vendedorId;
+    private int vendedorId;
     
     @Column
-    private List<Producto> productos;
+    private List<Producto_venta> productos;
  
 
     public int getId() {
@@ -60,19 +60,19 @@ public class Venta implements Serializable {
 		this.total = total;
 	}
 
-	public Vendedor getVendedorId() {
+	public int getVendedorId() {
 		return vendedorId;
 	}
 
-	public void setVendedorId(Vendedor vendedorId) {
+	public void setVendedorId(int vendedorId) {
 		this.vendedorId = vendedorId;
 	}
 
-	public List<Producto> getProductos() {
+	public List<Producto_venta> getProductos() {
 		return productos;
 	}
 
-	public void setProductos(List<Producto> productos) {
+	public void setProductos(List<Producto_venta> productos) {
 		this.productos = productos;
 	}
 

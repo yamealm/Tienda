@@ -27,7 +27,7 @@ public class Producto implements Serializable {
     private String nombre;
     
     @Column
-    private Categoria categoria;
+    private int categoriaId;
     
     @Column
     private Float precio;
@@ -57,12 +57,12 @@ public class Producto implements Serializable {
         this.nombre = nombre;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public int getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setCategoriaId(int categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
     public Float getPrecio() {
