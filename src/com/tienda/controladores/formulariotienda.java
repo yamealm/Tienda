@@ -272,7 +272,12 @@ public class formulariotienda extends javax.swing.JFrame {
         producto2.setNombre("XBOX X");
         producto2.setCategoriaId(1);
         producto2.setPrecio(2500f);
-        conn.guardarProducto(producto2);
+        Producto producto3 = new Producto();
+        producto3.setCodigo("0004");
+        producto3.setNombre("SPIDERMAN");
+        producto3.setCategoriaId(2);
+        producto3.setPrecio(400f);
+        conn.guardarProducto(producto3);
     }
     
     private void cargarComboProductos(Categoria categoria){
