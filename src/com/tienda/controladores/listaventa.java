@@ -1,47 +1,51 @@
 
 package com.tienda.controladores;
+import com.tienda.modelos.Vendedor;
+import com.tienda.modelos.Producto;
+import com.tienda.modelos.Categoria;
+
 
 public class listaventa{
     
-       String producto;
-       String categoria;
-       String vendedor;
-       double ventas;
+       Producto producto;
+       Categoria categoria;
+       Vendedor vendedor;
+       float ventas;
        
        public listaventa(){
 } 
-    public String getProducto(){
-           
-           return producto;
-    }
-       public void setProducto (String producto){
-           
-           this.producto=producto;
-       }
-     
-       public String getCategoria(){
-           
-           return categoria;
-    }
-       public void setCategoria (String categoria){
-           
-           this.categoria=categoria;
-       }      
-           public String getVendedor(){
-           
-           return vendedor;
-    }
-       public void setVendedor (String vendedor){
-           
-           this.vendedor=vendedor;
-       }
-       public double getVenta(){
-           
-           return ventas;
-    }
-       public void setVenta (double ventas){
-           
-           this.ventas=ventas;
-       }
 
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public Vendedor getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+    }
+
+    public float getVentas() {
+        return ventas;
+    }
+
+    public void setVentas(float ventas) {
+        this.ventas = ventas;
+    }
+       
+    
 }

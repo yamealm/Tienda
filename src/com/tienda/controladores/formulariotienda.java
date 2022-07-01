@@ -11,9 +11,12 @@ import com.tienda.conexion.db.conexion;
 import com.tienda.excepciones.RegisterNoEncontradoException;
 import com.tienda.modelos.Categoria;
 import com.tienda.modelos.Producto;
+import com.tienda.modelos.Producto_venta;
 import com.tienda.modelos.Vendedor;
+import com.tienda.modelos.Venta;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Date;
 
 
 
@@ -29,9 +32,12 @@ public class formulariotienda extends javax.swing.JFrame {
     public formulariotienda() {
         initComponents();
         conn = new conexion();
-        cargarProductos(null);
         cargarCategorias();
+        cargarComboCategorias();
+        cargarProductos();
+        cargarComboProductos(null);
         cargarVendedores();
+        cargarComboVendedores();
         calcularPrecio();
         modelo.addColumn("PRODUCTO");
         modelo.addColumn("CATEGORIA");
@@ -248,7 +254,28 @@ public class formulariotienda extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void cargarProductos(Categoria categoria){
+    private void cargarProductos() {
+        Producto producto = new Producto();
+        producto.setCodigo("0001");
+        producto.setNombre("PLAYSTATION 4");
+        producto.setCategoriaId(1);
+        producto.setPrecio(1000f);
+        conn.guardarProducto(producto);
+        Producto producto1 = new Producto();
+        producto1.setCodigo("0002");
+        producto1.setNombre("PLAYSTATION 5");
+        producto1.setCategoriaId(1);
+        producto1.setPrecio(2000f);
+        conn.guardarProducto(producto1);
+        Producto producto2 = new Producto();
+        producto2.setCodigo("0003");
+        producto2.setNombre("XBOX X");
+        producto2.setCategoriaId(1);
+        producto2.setPrecio(2500f);
+        conn.guardarProducto(producto2);
+    }
+    
+    private void cargarComboProductos(Categoria categoria){
         DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
         try {
             List<Producto> productos = categoria==null ? conn.buscarProdutos():conn.buscarProdutosPorCategoria(categoria.getId());
@@ -264,11 +291,26 @@ public class formulariotienda extends javax.swing.JFrame {
     }
     
     private void cargarCategorias() {
+        Categoria categoria = new Categoria();
+        categoria.setId(1);
+        categoria.setNombre("CONSOLA");
+        conn.guardarCategoria(categoria);
+        Categoria categoria1 = new Categoria();
+        categoria1.setId(2);
+        categoria1.setNombre("VIDEO JUEGOS");
+        conn.guardarCategoria(categoria1);
+        Categoria categoria2 = new Categoria();
+        categoria2.setId(3);
+        categoria2.setNombre("ACCESORIOS");
+        conn.guardarCategoria(categoria2);
+    }
+    
+    private void cargarComboCategorias() {
         DefaultComboBoxModel comboModel2 = new DefaultComboBoxModel();
         try {
             List<Categoria> categorias = conn.buscarCategorias();
-            for (Categoria categoria : categorias) {
-                comboModel2.addElement(categoria);
+            for (Categoria c : categorias) {
+                comboModel2.addElement(c);
             }
         } catch (RegisterNoEncontradoException e) {
             JOptionPane.showMessageDialog(null, "Aviso:" + e.getMessage());
@@ -278,13 +320,26 @@ public class formulariotienda extends javax.swing.JFrame {
             @Override
             public void itemStateChanged(ItemEvent event) {
                 if (event.getStateChange() == ItemEvent.SELECTED) {
-                    cargarProductos(((Categoria)comboxcat.getSelectedItem()));
+                    cargarComboProductos(((Categoria)comboxcat.getSelectedItem()));
                 }
             }
         });
     }
     
     private void cargarVendedores() {
+        Vendedor vendedor = new Vendedor();
+        vendedor.setId(1);
+        vendedor.setNombre("RHOYMMER GRANADOS");
+        vendedor.setSueldo(0f);
+        conn.guardarvendedor(vendedor);
+        Vendedor vendedor1 = new Vendedor();
+        vendedor1.setId(2);
+        vendedor1.setNombre("MILDRA ALVAREZ");
+        vendedor1.setSueldo(0f);
+        conn.guardarvendedor(vendedor1);
+    }
+    
+    private void cargarComboVendedores() {
         DefaultComboBoxModel comboModel3 = new DefaultComboBoxModel();
         try {
             List<Vendedor> vendedores = conn.buscarVendedores();
@@ -301,24 +356,31 @@ public class formulariotienda extends javax.swing.JFrame {
     private void botGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botGuardarActionPerformed
               
         int filas = tablaventa.getRowCount();
-        listaventa[] listado = new listaventa[filas];
-        for(int i=0;i<filas;i++){
-        listado[i] = new listaventa();
-        System.out.println("PRODUCTO:" + tablaventa.getValueAt(i, 0));
-        listado[i].producto =  tablaventa.getValueAt(i, 0).toString();
-        System.out.println("CATEGORIA:" + tablaventa.getValueAt(i, 1));
-        listado[i].categoria =  tablaventa.getValueAt(i, 1).toString();
-        System.out.println("VENDEDOR:" + tablaventa.getValueAt(i, 2));
-        listado[i].vendedor =  tablaventa.getValueAt(i, 2).toString();
-        System.out.println("TOTAL:" + tablaventa.getValueAt(i, 3));
-        listado[i].ventas = Float.parseFloat(tablaventa.getValueAt(i, 3).toString());
+        Vendedor vendedor = null;
+        Venta venta = new Venta();
+        int numeroVenta = conn.numeroVenta();
+        venta.setId(numeroVenta);
+        venta.setFecha(new Date());
+        float totalVenta = Float.parseFloat(txttotal.getText());
+        venta.setTotal(totalVenta);
+        List<Producto_venta> producto_ventas = new ArrayList<Producto_venta>();
+        for (int i = 0; i < filas; i++) {
+            Producto_venta producto_venta = new Producto_venta();
+
+            Producto producto = (Producto) tablaventa.getValueAt(i, 0);
+            producto_venta.setIdProducto(producto.getId());
+            producto_venta.setIdVenta(numeroVenta);
+            producto_venta.setId(conn.idProductoVenta());
+            producto_ventas.add(producto_venta);
+            vendedor = (Vendedor) tablaventa.getValueAt(i, 2);
+            venta.setVendedorId(vendedor.getId());
         }
-       Vendedor vendedor = new Vendedor();
-       vendedor.setNombre(tablaventa.getValueAt(0, 2).toString());
+
+       float sueldoVendedor = vendedor.getSueldo() + totalVenta ;
        vendedor.setSueldo(Float.parseFloat(txttotal.getText()));
-       conn = new conexion();
-       conn.guardar(listado);
-       conn.guardarvendedor(vendedor);
+       conn.guardarVenta(venta);
+       conn.actualizarVendedor(vendedor);
+       JOptionPane.showMessageDialog(null, "Aviso: Venta registrada");
             
     }//GEN-LAST:event_botGuardarActionPerformed
 
@@ -330,10 +392,10 @@ public class formulariotienda extends javax.swing.JFrame {
     private void botagreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botagreActionPerformed
 
         listaventa ventas = new listaventa(); 
-        ventas.setProducto(comboxpro.getSelectedItem().toString());
-        ventas.setCategoria(comboxcat.getSelectedItem().toString());
-        ventas.setVendedor(comboxven.getSelectedItem().toString());
-        ventas.setVenta(cantidad*preciounidad);
+        ventas.setProducto((Producto)comboxpro.getSelectedItem());
+        ventas.setCategoria((Categoria)comboxcat.getSelectedItem());
+        ventas.setVendedor((Vendedor)comboxven.getSelectedItem());
+        ventas.setVentas(cantidad*preciounidad);
         listaVenta.add(ventas);
         actualizarTabla();
     }//GEN-LAST:event_botagreActionPerformed
@@ -341,7 +403,6 @@ public class formulariotienda extends javax.swing.JFrame {
     private void botbuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botbuscarActionPerformed
        
        String nombrvendedor = null;
-       conn = new conexion();
        try {
 		conn.buscarProdutos();
 	} catch (RegisterNoEncontradoException e) {
@@ -386,8 +447,8 @@ public class formulariotienda extends javax.swing.JFrame {
             x[0] = v.getProducto();
             x[1] = v.getCategoria();
             x[2] = v.getVendedor();
-            x[3] = v.getVenta();
-            subtotal+=v.getVenta();
+            x[3] = v.getVentas();
+            subtotal+=v.getVentas();
             modelo.addRow(x);
         }  
         
@@ -397,13 +458,11 @@ public class formulariotienda extends javax.swing.JFrame {
         txttotal.setText(Moneda(total));
           
         if (cantidad <=2){
-         
          comision = total*0.05f;
          txtcomision.setText(Moneda(comision));
         }
         
         else {
-            
             comision = total*0.10f;
             txtcomision.setText(Moneda(comision));
         }
