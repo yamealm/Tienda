@@ -375,7 +375,7 @@ public class formulariotienda extends javax.swing.JFrame {
             vendedor = (Vendedor) tablaventa.getValueAt(i, 2);
             venta.setVendedorId(vendedor.getId());
         }
-
+       venta.setProductos(producto_ventas);
        float sueldoVendedor = vendedor.getSueldo() + totalVenta ;
        vendedor.setSueldo(Float.parseFloat(txttotal.getText()));
        conn.guardarVenta(venta);
