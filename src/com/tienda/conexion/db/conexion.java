@@ -71,6 +71,9 @@ public class conexion {
                 list.add(p);
             }
         }
+        if (list.isEmpty()) {
+            throw new RegisterNoEncontradoException("No existen productos con esa categoria");
+        }
         return list;
     }
 
