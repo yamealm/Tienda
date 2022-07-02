@@ -431,7 +431,7 @@ public class formulariotienda extends javax.swing.JFrame {
 
         listaventa ventas = new listaventa(); 
         ventas.setProducto((Producto)comboxpro.getSelectedItem());
-        ventas.setCantidad((Cantidad)spincanpro.getValue());
+        ventas.setCantidad((int) spincanpro.getValue());
         ventas.setCategoria((Categoria)comboxcat.getSelectedItem());
         ventas.setVendedor((Vendedor)comboxven.getSelectedItem());
         ventas.setVentas(cantidad*preciounidad);
@@ -480,11 +480,13 @@ public class formulariotienda extends javax.swing.JFrame {
         }
         
         float subtotal = 0;
+        int cantidaVenta = 0;
         
         for (listaventa v : listaVenta){
             Object x[] = new Object[5];
             x[0] = v.getProducto();
             x[1] = v.getCantidad();
+            cantidaVenta +=v.getCantidad();
             x[2] = v.getCategoria();
             x[3] = v.getVendedor();
             x[4] = v.getVentas();
@@ -494,10 +496,9 @@ public class formulariotienda extends javax.swing.JFrame {
         
         float total = subtotal;  
         float comision = 0;
-        cantidad=Integer.parseInt(spincanpro.getValue().toString());
         txttotal.setText(Moneda(total));
           
-        if (cantidad <=2){
+        if (cantidaVenta <=2){
          comision = total*0.05f;
          txtcomision.setText(Moneda(comision));
         }
