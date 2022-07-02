@@ -1,20 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.tienda.modelos;
 
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
-
-
-/**
- *
- * @author Rhoymmer Granados
- */
 public class Producto_venta implements Serializable {
     
     @Id
@@ -22,6 +12,9 @@ public class Producto_venta implements Serializable {
     
     @Column
     private int idProducto;
+    
+    @Column
+    private int idCantidad;
     
     @Column
     private int idVenta;
@@ -41,6 +34,14 @@ public class Producto_venta implements Serializable {
 
 	public void setIdProducto(int idProducto) {
 		this.idProducto = idProducto;
+	}
+        
+        public int getIdCantidad() {
+		return idCantidad;
+	}
+
+	public void setIdCantidad(int idCantidad) {
+		this.idCantidad = idCantidad;
 	}
 
 	public int getIdVenta() {

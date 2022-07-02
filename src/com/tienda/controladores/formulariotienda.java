@@ -40,6 +40,7 @@ public class formulariotienda extends javax.swing.JFrame {
         cargarComboVendedores();
         calcularPrecio();
         modelo.addColumn("PRODUCTO");
+        modelo.addColumn("CANTIDAD");
         modelo.addColumn("CATEGORIA");
         modelo.addColumn("VENDEDOR");
         modelo.addColumn("TOTAL");
@@ -259,25 +260,57 @@ public class formulariotienda extends javax.swing.JFrame {
         producto.setCodigo("0001");
         producto.setNombre("PLAYSTATION 4");
         producto.setCategoriaId(1);
-        producto.setPrecio(1000f);
+        producto.setPrecio(500f);
         conn.guardarProducto(producto);
+       
         Producto producto1 = new Producto();
         producto1.setCodigo("0002");
         producto1.setNombre("PLAYSTATION 5");
         producto1.setCategoriaId(1);
-        producto1.setPrecio(2000f);
+        producto1.setPrecio(700f);
         conn.guardarProducto(producto1);
+       
         Producto producto2 = new Producto();
         producto2.setCodigo("0003");
         producto2.setNombre("XBOX X");
         producto2.setCategoriaId(1);
-        producto2.setPrecio(2500f);
+        producto2.setPrecio(700f);
+        conn.guardarProducto(producto2);
+        
         Producto producto3 = new Producto();
         producto3.setCodigo("0004");
-        producto3.setNombre("SPIDERMAN");
-        producto3.setCategoriaId(2);
+        producto3.setNombre("XBOX S");
+        producto3.setCategoriaId(1);
         producto3.setPrecio(400f);
         conn.guardarProducto(producto3);
+        
+        Producto producto4 = new Producto();
+        producto4.setCodigo("0005");
+        producto4.setNombre("NINTENDO SWITCH");
+        producto4.setCategoriaId(1);
+        producto4.setPrecio(300f);
+        conn.guardarProducto(producto4);
+       
+        Producto producto5 = new Producto();
+        producto5.setCodigo("0006");
+        producto5.setNombre("SPIDERMAN");
+        producto5.setCategoriaId(2);
+        producto5.setPrecio(45.5f);
+        conn.guardarProducto(producto5);
+        
+        Producto producto6 = new Producto();
+        producto6.setCodigo("0007");
+        producto6.setNombre("GOD OF WAR 4");
+        producto6.setCategoriaId(2);
+        producto6.setPrecio(21.3f);
+        conn.guardarProducto(producto6);
+        
+        Producto producto7 = new Producto();
+        producto7.setCodigo("0008");
+        producto7.setNombre("FIFA 22");
+        producto7.setCategoriaId(2);
+        producto7.setPrecio(61.7f);
+        conn.guardarProducto(producto7);
     }
     
     private void cargarComboProductos(Categoria categoria){
@@ -302,7 +335,7 @@ public class formulariotienda extends javax.swing.JFrame {
         conn.guardarCategoria(categoria);
         Categoria categoria1 = new Categoria();
         categoria1.setId(2);
-        categoria1.setNombre("VIDEO JUEGOS");
+        categoria1.setNombre("VIDEOJUEGOS");
         conn.guardarCategoria(categoria1);
         Categoria categoria2 = new Categoria();
         categoria2.setId(3);
@@ -398,6 +431,7 @@ public class formulariotienda extends javax.swing.JFrame {
 
         listaventa ventas = new listaventa(); 
         ventas.setProducto((Producto)comboxpro.getSelectedItem());
+        ventas.setCantidad((Cantidad)spincanpro.getValue());
         ventas.setCategoria((Categoria)comboxcat.getSelectedItem());
         ventas.setVendedor((Vendedor)comboxven.getSelectedItem());
         ventas.setVentas(cantidad*preciounidad);
@@ -413,7 +447,7 @@ public class formulariotienda extends javax.swing.JFrame {
 	} catch (RegisterNoEncontradoException e) {
 		JOptionPane.showMessageDialog(null, "Aviso:" + e.getMessage());
 	}
-//       conn.buscar(nombrvendedor);
+    //conn.buscar(nombrvendedor);
     }//GEN-LAST:event_botbuscarActionPerformed
 
     private void spincanproStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spincanproStateChanged
@@ -448,11 +482,12 @@ public class formulariotienda extends javax.swing.JFrame {
         float subtotal = 0;
         
         for (listaventa v : listaVenta){
-            Object x[] = new Object[4];
+            Object x[] = new Object[5];
             x[0] = v.getProducto();
-            x[1] = v.getCategoria();
-            x[2] = v.getVendedor();
-            x[3] = v.getVentas();
+            x[1] = v.getCantidad();
+            x[2] = v.getCategoria();
+            x[3] = v.getVendedor();
+            x[4] = v.getVentas();
             subtotal+=v.getVentas();
             modelo.addRow(x);
         }  

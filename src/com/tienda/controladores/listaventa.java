@@ -8,6 +8,7 @@ import com.tienda.modelos.Categoria;
 public class listaventa{
     
        Producto producto;
+       Cantidad cantidad;
        Categoria categoria;
        Vendedor vendedor;
        float ventas;
@@ -22,7 +23,15 @@ public class listaventa{
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
-
+       
+    public Cantidad getCantidad() {
+        return cantidad;
+    }
+    
+    public void setCantidad(Cantidad cantidad) {
+        this.cantidad = cantidad;
+    }
+    
     public Categoria getCategoria() {
         return categoria;
     }

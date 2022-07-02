@@ -12,19 +12,13 @@ public class conexion {
 
     private List<Categoria> categorias = new ArrayList<Categoria>();
     private List<Producto> productos = new ArrayList<Producto>();
+   // private List<Cantidad> cantidad = new ArrayList<Cantidad>();
     private List<Vendedor> vendedores = new ArrayList<Vendedor>();
     private List<Venta> ventas = new ArrayList<Venta>();
     private int numeroVenta = 1;
     private int idProductoVenta =1;
 
-    
 
-    public conexion() {
-
-       
-    }
-
-  
     public void guardarvendedor(Vendedor vendedor) {
         vendedores.add(vendedor);
     }
